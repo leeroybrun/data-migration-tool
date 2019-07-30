@@ -69,7 +69,7 @@ class Data implements StageInterface
         if (!$this->inventoryModule->isInventoryModuleEnabled()) {
             return true;
         }
-        $inventoryModels = [$this->sourceItem, $this->stockSalesChannel, $this->shipmentSource];
+        $inventoryModels = [$this->stockSalesChannel, $this->shipmentSource];
         $this->progress->start(count($inventoryModels));
         /** @var Model\InventoryModelInterface $inventoryModel */
         foreach ($inventoryModels as $inventoryModel) {

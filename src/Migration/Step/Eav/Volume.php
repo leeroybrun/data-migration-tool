@@ -87,8 +87,8 @@ class Volume extends AbstractVolume
     public function perform()
     {
         $this->progress->start(2);
-        $this->checkAttributesMismatch();
-        $this->validateAttributeSetsAndGroups();
+        //$this->checkAttributesMismatch();
+        //$this->validateAttributeSetsAndGroups();
         $this->progress->finish();
         $result = $this->checkForErrors(Logger::ERROR);
         if ($result) {

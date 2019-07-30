@@ -82,7 +82,7 @@ class Integrity extends \Migration\App\Step\AbstractIntegrity
         if (!$this->inventoryModule->isInventoryModuleEnabled()) {
             return true;
         }
-        $inventoryModels = [$this->sourceItem, $this->stockSalesChannel, $this->shipmentSource];
+        $inventoryModels = [$this->stockSalesChannel, $this->shipmentSource];
         $this->progress->start(count($inventoryModels));
         /** @var Model\TableInterface $inventoryModel */
         foreach ($inventoryModels as $inventoryModel) {

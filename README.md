@@ -1,3 +1,22 @@
+## Magento 1 to Magento 2 data migration, without migrating products
+
+This fork of the `data-migration-tool` migrates a Magento1 database to Magento2 while ignoring products and settings.
+
+Only the orders, customers and categories are migrated.
+
+This is only provided as an example with no guarantee or support. Use it at your own risk!
+
+The `config.xml.dist` and `map.xml.dist` files are only provided for the migration from Magento 1.9.4.0, but you can easily adapt them for other versions.
+
+If you would like to add settings back in the migration process, just add this block right after `<steps mode="settings">` in the config.xml file.
+
+```
+        <step title="Settings Step">
+            <integrity>Migration\Step\Settings\Integrity</integrity>
+            <data>Migration\Step\Settings\Data</data>
+        </step>
+```
+
 ## Overview
 We're pleased you're considering moving from the world's #1 eCommerce platform—Magento 1.x—to the eCommerce platform for the future, Magento 2. We're also excited to share the details about this process, which we refer to as migration.
 

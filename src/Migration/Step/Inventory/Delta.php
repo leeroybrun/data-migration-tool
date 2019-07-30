@@ -80,7 +80,6 @@ class Delta extends AbstractDelta
         $this->shipmentSource = $shipmentSource;
         $this->inventoryModule = $inventoryModule;
         $this->deltaTablesMap = [
-            'cataloginventory_stock_item' => ['field' => 'product_id', 'model' => $this->sourceItem],
             'sales_flat_shipment' => ['field' => 'entity_id', 'model' => $this->shipmentSource]
         ];
         parent::__construct(
