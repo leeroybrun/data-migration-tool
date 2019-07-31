@@ -17,6 +17,8 @@ If you would like to add settings back in the migration process, just add this b
         </step>
 ```
 
+You can view the list of changes made here : https://github.com/leeroybrun/data-migration-tool/commit/3892d30b1cd379c779546b60d724c927898b3d8c
+
 ## Overview
 We're pleased you're considering moving from the world's #1 eCommerce platform—Magento 1.x—to the eCommerce platform for the future, Magento 2. We're also excited to share the details about this process, which we refer to as migration.
 
