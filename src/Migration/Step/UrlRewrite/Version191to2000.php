@@ -200,22 +200,17 @@ class Version191to2000 extends \Migration\Step\DatabaseStage implements Rollback
             $destinationRecords = $destDocument->getRecords();
             $destProductCategoryRecords = $destProductCategory->getRecords();
             foreach ($bulk as $recordData) {
+                if (strpos($recordData['id_path'], 'category') === false) {
+                    continue;
+                }
+
                 /** @var Record $record */
                 $record = $this->recordFactory->create(['document' => $sourceDocument, 'data' => $recordData]);
                 /** @var Record $destRecord */
                 $destRecord = $this->recordFactory->create(['document' => $destDocument]);
                 $this->transform($record, $destRecord);
-                if ($record->getValue('is_system')
-                    && $record->getValue('product_id')
-                    && $record->getValue('category_id')
-                    && $record->getValue('request_path') !== null
-                ) {
-                    $destProductCategoryRecord = $this->recordFactory->create(['document' => $destProductCategory]);
-                    $destProductCategoryRecord->setValue('url_rewrite_id', $record->getValue('url_rewrite_id'));
-                    $destProductCategoryRecord->setValue('category_id', $record->getValue('category_id'));
-                    $destProductCategoryRecord->setValue('product_id', $record->getValue('product_id'));
-                    $destProductCategoryRecords->addRecord($destProductCategoryRecord);
-                }
+
+                $destRecord->setValue('url_rewrite_id', null);
 
                 $destinationRecords->addRecord($destRecord);
             }
@@ -225,7 +220,7 @@ class Version191to2000 extends \Migration\Step\DatabaseStage implements Rollback
             $this->destination->saveRecords(self::DESTINATION, $destinationRecords);
             $this->destination->saveRecords(self::DESTINATION_PRODUCT_CATEGORY, $destProductCategoryRecords);
         }
-        $this->saveCmsPageRewrites();
+        //$this->saveCmsPageRewrites();
         $this->progress->finish();
         return true;
     }
@@ -251,11 +246,7 @@ class Version191to2000 extends \Migration\Step\DatabaseStage implements Rollback
     {
         $result = true;
         $this->progress->start(1);
-        $result &= $this->source->getRecordsCount(self::SOURCE) + $this->countCmsPageRewrites() ==
-            ($this->destination->getRecordsCount(self::DESTINATION));
-        if (!$result) {
-            $this->logger->error('Mismatch of entities in the document: url_rewrite');
-        }
+
         $this->progress->advance();
         $this->progress->finish();
         return (bool)$result;

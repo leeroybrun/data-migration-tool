@@ -32,6 +32,11 @@
             <data>Migration\Step\Map\Data</data>
             <volume>Migration\Step\Map\Volume</volume>
         </step>
+        <step title="Url Rewrite Step">
+            <integrity>Migration\Step\UrlRewrite\Version191to2000</integrity>
+            <data>Migration\Step\UrlRewrite\Version191to2000</data>
+            <volume>Migration\Step\UrlRewrite\Version191to2000</volume>
+        </step>
         <step title="OrderGrids Step">
             <integrity>Migration\Step\OrderGrids\Integrity</integrity>
             <data>Migration\Step\OrderGrids\Data</data>
