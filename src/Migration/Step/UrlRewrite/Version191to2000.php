@@ -191,8 +191,19 @@ class Version191to2000 extends \Migration\Step\DatabaseStage implements Rollback
         $destDocument = $this->destination->getDocument(self::DESTINATION);
         $destProductCategory = $this->destination->getDocument(self::DESTINATION_PRODUCT_CATEGORY);
 
+        // Keep URL Rewrites from destination
+        $recordsToKeep = $destDocument->getRecords();
+        $dstRecords = $this->destination->getRecords(self::DESTINATION, 0, $this->destination->getRecordsCount(self::DESTINATION));
+        foreach ($dstRecords as $recordData) {
+            $destinationRecord = $this->recordFactory->create(['document' => $destDocument, 'data' => $recordData]);
+            
+            $recordsToKeep->addRecord($destinationRecord);
+        }
+
         $this->destination->clearDocument(self::DESTINATION);
         $this->destination->clearDocument(self::DESTINATION_PRODUCT_CATEGORY);
+
+        $this->destination->saveRecords(self::DESTINATION, $recordsToKeep);
 
         $pageNumber = 0;
         while (!empty($bulk = $this->source->getRecords(self::SOURCE, $pageNumber))) {
