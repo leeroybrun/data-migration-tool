@@ -118,6 +118,10 @@ class InitialData
      */
     protected function initAttributeSets()
     {
+        $this->attributeSets['source'] = $this->helper->getSourceRecords(
+            'eav_attribute_set',
+            ['attribute_set_id']
+        );
         $this->attributeSets['dest'] = $this->helper->getDestinationRecords(
             'eav_attribute_set',
             ['attribute_set_id']
@@ -131,6 +135,10 @@ class InitialData
      */
     protected function initAttributeGroups()
     {
+        $this->attributeGroups['source'] = $this->helper->getSourceRecords(
+            'eav_attribute_group',
+            ['attribute_set_id', 'attribute_group_name']
+        );
         $this->attributeGroups['dest'] = $this->helper->getDestinationRecords(
             'eav_attribute_group',
             ['attribute_set_id', 'attribute_group_name']
