@@ -9,6 +9,7 @@ atlassian*
 /.idea
 /.gitattributes
 /node_modules
+.DS_Store
 
 /tests/unit/tmp
 /tests/unit/phpunit.xml
