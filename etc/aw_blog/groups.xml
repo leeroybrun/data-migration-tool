@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="../groups.xsd">
+    <group name="source_documents">
+        <document>aw_blog</document>
+        <document>aw_blog_cat</document>
+        <document>aw_blog_post_cat</document>
+        <document>aw_blog_store</document>
+        <document>aw_blog_cat_store</document>
+    </group>
+    <group name="collect_old_new_data">
+        <document key="post_id">aw_blog</document>
+        <document key="cat_id">aw_blog_cat</document>
+    </group>
+    <group name="save_collected_old_new_data_aw_blog_post_cat">
+        <document key="post_id">aw_blog</document>
+        <document key="cat_id">aw_blog_cat</document>
+    </group>
+    <group name="save_collected_old_new_data_aw_blog_store">
+        <document key="post_id">aw_blog</document>
+        <attribute key="store_id">0</attribute>
+    </group>
+    <group name="save_collected_old_new_data_aw_blog_cat_store">
+        <document key="cat_id">aw_blog_cat</document>
+        <attribute key="store_id">0</attribute>
+    </group>
+    <group name="destination_documents_update_on_duplicate">
+        <document key="post_id,store_id">aw_blog_post_store</document>
+        <document key="category_id,store_id">aw_blog_category_store</document>
+        <document key="request_path,store_id">url_rewrite</document>
+    </group>
+</groups>

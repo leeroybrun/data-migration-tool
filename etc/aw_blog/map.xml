@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="../../map.xsd">
+    <source>
+        <document_rules>
+            <rename>
+                <document>aw_blog</document>
+                <to>aw_blog_post</to>
+            </rename>
+            <rename>
+                <document>aw_blog_cat</document>
+                <to>aw_blog_category</to>
+            </rename>
+            <rename>
+                <document>aw_blog_cat_store</document>
+                <to>aw_blog_category_store</to>
+            </rename>
+            <rename>
+                <document>aw_blog_store</document>
+                <to>aw_blog_post_store</to>
+            </rename>
+            <rename>
+                <document>aw_blog_post_cat</document>
+                <to>aw_blog_post_category</to>
+            </rename>
+        </document_rules>
+        <field_rules>
+            <move>
+                <field>aw_blog.post_id</field>
+                <to>aw_blog_post.id</to>
+            </move>
+            <move>
+                <field>aw_blog.post_content</field>
+                <to>aw_blog_post.content</to>
+            </move>
+            <move>
+                <field>aw_blog.meta_description</field>
+                <to>aw_blog_post.meta_description</to>
+            </move>
+            <move>
+                <field>aw_blog.identifier</field>
+                <to>aw_blog_post.url_key</to>
+            </move>
+            <move>
+                <field>aw_blog.user</field>
+                <to>aw_blog_post.author_name</to>
+            </move>
+            <move>
+                <field>aw_blog.created_time</field>
+                <to>aw_blog_post.created_at</to>
+            </move>
+            <move>
+                <field>aw_blog.update_time</field>
+                <to>aw_blog_post.updated_at</to>
+            </move>
+            <move>
+                <field>aw_blog.comments</field>
+                <to>aw_blog_post.is_allow_comments</to>
+            </move>
+            <transform>
+                <field>aw_blog.status</field>
+                <handler class="\Migration\Handler\Convert">
+                    <param name="map" value="[1:publication;2:draft;3:draft]" />
+                    <param name="defaultValue" value="draft" />
+                </handler>
+            </transform>
+            <transform>
+                <field>aw_blog.short_content</field>
+                <handler class="\Migration\Handler\Placeholder" />
+            </transform>
+            <transform>
+                <field>aw_blog.post_content</field>
+                <handler class="\Migration\Handler\Placeholder" />
+            </transform>
+            <transform>
+                <field>aw_blog.comments</field>
+                <handler class="\Migration\Handler\Convert">
+                    <param name="map" value="[0:1;1:0]" />
+                    <param name="defaultValue" value="0" />
+                </handler>
+            </transform>
+            <move>
+                <field>aw_blog_cat.cat_id</field>
+                <to>aw_blog_category.id</to>
+            </move>
+            <move>
+                <field>aw_blog_cat.title</field>
+                <to>aw_blog_category.name</to>
+            </move>
+            <move>
+                <field>aw_blog_cat.title</field>
+                <to>aw_blog_category.name</to>
+            </move>
+            <move>
+                <field>aw_blog_cat.identifier</field>
+                <to>aw_blog_category.url_key</to>
+            </move>
+            <move>
+                <field>aw_blog_cat.sort_order</field>
+                <to>aw_blog_category.sort_order</to>
+            </move>
+            <move>
+                <field>aw_blog_cat.meta_description</field>
+                <to>aw_blog_category.meta_description</to>
+            </move>
+            <move>
+                <field>aw_blog_cat_store.cat_id</field>
+                <to>aw_blog_category.category_id</to>
+            </move>
+            <move>
+                <field>aw_blog_cat_store.store_id</field>
+                <to>aw_blog_category.store_id</to>
+            </move>
+            <move>
+                <field>aw_blog_store.post_id</field>
+                <to>aw_blog_post_store.post_id</to>
+            </move>
+            <move>
+                <field>aw_blog_store.store_id</field>
+                <to>aw_blog_post_store.store_id</to>
+            </move>
+            <move>
+                <field>aw_blog_post_cat.cat_id</field>
+                <to>aw_blog_post_category.category_id</to>
+            </move>
+            <move>
+                <field>aw_blog_post_cat.post_id</field>
+                <to>aw_blog_post_category.post_id</to>
+            </move>
+            <ignore>
+                <field>aw_blog.meta_keywords</field>
+            </ignore>
+            <ignore>
+                <field>aw_blog.update_user</field>
+            </ignore>
+            <ignore>
+                <field>aw_blog.tags</field>
+            </ignore>
+            <ignore>
+                <field>aw_blog_cat.meta_keywords</field>
+            </ignore>
+        </field_rules>
+    </source>
+    <destination>
+        <field_rules>
+            <transform>
+                <field>aw_blog_post.publish_date</field>
+                <handler class="\Migration\Handler\AheadworksBlog\PostPublishDateCopy"/>
+            </transform>
+            <transform>
+                <field>aw_blog_post.url_key</field>
+                <handler class="\Migration\Handler\AheadworksBlog\UrlKeyIsUnique"/>
+            </transform>
+            <transform>
+                <field>aw_blog_category.status</field>
+                <handler class="\Migration\Handler\SetValue">
+                    <param name="value" value="1" />
+                </handler>
+            </transform>
+            <transform>
+                <field>aw_blog_category.url_key</field>
+                <handler class="\Migration\Handler\AheadworksBlog\UrlKeyIsUnique"/>
+            </transform>
+            <ignore>
+                <field>aw_blog_post.publish_date</field>
+            </ignore>
+            <ignore>
+                <field>aw_blog_post.meta_title</field>
+            </ignore>
+            <ignore>
+                <field>aw_blog_post.product_condition</field>
+            </ignore>
+            <ignore>
+                <field>aw_blog_category.meta_title</field>
+            </ignore>
+        </field_rules>
+    </destination>
+</map>

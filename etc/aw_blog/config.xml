@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="../../../config.xsd">
+    <steps mode="data">
+        <step title="Aheadworks Blog Step">
+            <integrity>Migration\Step\AheadworksBlog\Integrity</integrity>
+            <data>Migration\Step\AheadworksBlog\Data</data>
+            <volume>Migration\Step\AheadworksBlog\Volume</volume>
+        </step>
+    </steps>
+    <source>
+        <database host="localhost" name="db_name" user="root" password="root"/>
+    </source>
+    <destination>
+        <database host="localhost" name="db_name" user="root" password="root"/>
+    </destination>
+    <options>
+        <source_prefix />
+        <dest_prefix />
+        <log_file>aw_blog_migration.log</log_file>
+        <progress_bar_format>%percent%% [%bar%] Remaining Time: %remaining%</progress_bar_format>
+        <init_statements_source>SET NAMES utf8;</init_statements_source>
+        <init_statements_destination>SET NAMES utf8;</init_statements_destination>
+        <crypt_key />
+        <class_map>etc/ce-to-ce/class-map.xml.dist</class_map>
+        <aw_blog_map_file>etc/aw_blog/map.xml</aw_blog_map_file>
+        <aw_blog_groups_file>etc/aw_blog/groups.xml</aw_blog_groups_file>
+        <aw_blog_source_route_to_blog>blog</aw_blog_source_route_to_blog>
+        <aw_blog_destination_route_to_blog>blog</aw_blog_destination_route_to_blog>
+        <aw_blog_update>0</aw_blog_update>
+    </options>
+</config>
