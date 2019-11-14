@@ -45,6 +45,12 @@ class Delta extends AbstractDelta
      */
     private $attributesDataToCustomerEntityRecords;
 
+    protected $mapAttrIdsMigrated = array();
+    protected $mapAttrIdsKept = array();
+
+    protected $csvProcessor;
+    protected $dir;
+
     /**
      * @param Source $source
      * @param MapFactory $mapFactory
@@ -65,11 +71,15 @@ class Delta extends AbstractDelta
         ResourceModel\RecordFactory $recordFactory,
         \Migration\RecordTransformerFactory $recordTransformerFactory,
         Model\AttributesDataToSkip $attributesDataToSkip,
-        Model\AttributesDataToCustomerEntityRecords $attributesDataToCustomerEntityRecords
+        Model\AttributesDataToCustomerEntityRecords $attributesDataToCustomerEntityRecords,
+        \Magento\Framework\File\Csv $csvProcessor,
+        \Magento\Framework\Filesystem\DirectoryList $dir
     ) {
         $this->readerGroups = $groupsFactory->create('customer_document_groups_file');
         $this->attributesDataToSkip = $attributesDataToSkip;
         $this->attributesDataToCustomerEntityRecords = $attributesDataToCustomerEntityRecords;
+        $this->csvProcessor = $csvProcessor;
+        $this->dir = $dir;
         parent::__construct(
             $source,
             $mapFactory,
@@ -81,11 +91,30 @@ class Delta extends AbstractDelta
         );
     }
 
+    public function importIdsMaps() {
+        if(!isset($this->mapAttrIdsKept)) {
+            return;
+        }
+
+        $attrIdsKeptArray = $this->csvProcessor->getData($this->dir->getPath('var').'/migrationAttrIdsKept.csv');
+        $attrIdsMigratedArray = $this->csvProcessor->getData($this->dir->getPath('var').'/migrationAttrIdsMigrated.csv');
+
+        foreach ($attrIdsKeptArray as $row) {
+            $this->mapAttrIdsKept[$row[0]] = intval($row[1]);
+        }
+
+        foreach ($attrIdsMigratedArray as $row) {
+            $this->mapAttrIdsMigrated[$row[0]] = intval($row[1]);
+        }
+    }
+
     /**
      * @inheritdoc
      */
     protected function processChangedRecords($documentName, $idKey)
     {
+        $this->importIdsMaps();
+
         $items = $this->source->getChangedRecords($documentName, $idKey);
         if (empty($items)) {
             return;
@@ -108,6 +137,9 @@ class Delta extends AbstractDelta
                 $ids[] = $data[$idKey];
                 if (isset($data['attribute_id']) && in_array($data['attribute_id'], $skippedAttributes)) {
                     continue;
+                }
+                if(isset($data['attribute_id'])) {
+                    $data['attribute_id'] = $this->mapAttrIdsMigrated[$data['attribute_id']];
                 }
                 $this->transformData(
                     $data,

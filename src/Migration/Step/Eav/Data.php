@@ -159,6 +159,9 @@ class Data implements StageInterface, RollbackInterface
         'swatch_image' => 'image-management'
     ];
 
+    protected $csvProcessor;
+    protected $dir;
+
     /**
      * @param Source $source
      * @param Destination $destination
@@ -179,7 +182,9 @@ class Data implements StageInterface, RollbackInterface
         RecordFactory $factory,
         InitialData $initialData,
         IgnoredAttributes $ignoredAttributes,
-        ProgressBar\LogLevelProcessor $progress
+        ProgressBar\LogLevelProcessor $progress,
+        \Magento\Framework\File\Csv $csvProcessor,
+        \Magento\Framework\Filesystem\DirectoryList $dir
     ) {
         $this->source = $source;
         $this->destination = $destination;
@@ -190,6 +195,8 @@ class Data implements StageInterface, RollbackInterface
         $this->initialData = $initialData;
         $this->ignoredAttributes = $ignoredAttributes;
         $this->progress = $progress;
+        $this->csvProcessor = $csvProcessor;
+        $this->dir = $dir;
     }
 
     /**
@@ -1326,6 +1333,23 @@ class Data implements StageInterface, RollbackInterface
 
         var_dump('mapAttrIdsKept', $this->mapAttrIdsKept);
         var_dump('mapAttrIdsMigrated', $this->mapAttrIdsMigrated);
+
+        $this->exportIdsMaps();
+    }
+
+    public function exportIdsMaps() {
+        $attrIdsKeptArray = array();
+        foreach ($this->mapAttrIdsKept as $key => $value) {
+            $attrIdsKeptArray[] = array($key, $value);
+        }
+
+        $attrIdsMigratedArray = array();
+        foreach ($this->mapAttrIdsMigrated as $key => $value) {
+            $attrIdsMigratedArray[] = array($key, $value);
+        }
+
+        $this->csvProcessor->saveData($this->dir->getPath('var').'/migrationAttrIdsKept.csv', $attrIdsKeptArray);
+        $this->csvProcessor->saveData($this->dir->getPath('var').'/migrationAttrIdsMigrated.csv', $attrIdsMigratedArray);
     }
 
     /**

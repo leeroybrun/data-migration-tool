@@ -86,6 +86,12 @@ class Data extends \Migration\Step\DatabaseStage implements StageInterface
      */
     private $attributesToStatic;
 
+    protected $mapAttrIdsMigrated = array();
+    protected $mapAttrIdsKept = array();
+
+    protected $csvProcessor;
+    protected $dir;
+
     /**
      * @param \Migration\Config $config
      * @param ProgressBar\LogLevelProcessor $progressBar
@@ -115,7 +121,9 @@ class Data extends \Migration\Step\DatabaseStage implements StageInterface
         Model\AttributesToStatic $attributesToStatic,
         MapFactory $mapFactory,
         GroupsFactory $groupsFactory,
-        Logger $logger
+        Logger $logger,
+        \Magento\Framework\File\Csv $csvProcessor,
+        \Magento\Framework\Filesystem\DirectoryList $dir
     ) {
         $this->source = $source;
         $this->destination = $destination;
@@ -129,6 +137,8 @@ class Data extends \Migration\Step\DatabaseStage implements StageInterface
         $this->attributesDataToCustomerEntityRecords = $attributesDataToCustomerEntityRecords;
         $this->attributesDataToSkip = $attributesDataToSkip;
         $this->attributesToStatic = $attributesToStatic;
+        $this->csvProcessor = $csvProcessor;
+        $this->dir = $dir;
         parent::__construct($config);
     }
 
@@ -137,6 +147,7 @@ class Data extends \Migration\Step\DatabaseStage implements StageInterface
      */
     public function perform()
     {
+        $this->importIdsMaps();
         $stage = 'run';
         $sourceDocuments = array_keys($this->readerGroups->getGroup('source_documents'));
         $sourceEntityDocuments = array_keys($this->readerGroups->getGroup('source_entity_documents'));
@@ -155,6 +166,19 @@ class Data extends \Migration\Step\DatabaseStage implements StageInterface
         $this->attributesToStatic->update();
         $this->progressBar->finish(LogManager::LOG_LEVEL_INFO);
         return true;
+    }
+
+    public function importIdsMaps() {
+        $attrIdsKeptArray = $this->csvProcessor->getData($this->dir->getPath('var').'/migrationAttrIdsKept.csv');
+        $attrIdsMigratedArray = $this->csvProcessor->getData($this->dir->getPath('var').'/migrationAttrIdsMigrated.csv');
+
+        foreach ($attrIdsKeptArray as $row) {
+            $this->mapAttrIdsKept[$row[0]] = intval($row[1]);
+        }
+
+        foreach ($attrIdsMigratedArray as $row) {
+            $this->mapAttrIdsMigrated[$row[0]] = intval($row[1]);
+        }
     }
 
     /**
@@ -206,6 +230,9 @@ class Data extends \Migration\Step\DatabaseStage implements StageInterface
                 /** @var Record $destRecord */
                 $destRecord = $this->recordFactory->create(['document' => $destDocument]);
                 $recordTransformer->transform($record, $destRecord);
+                if(isset($recordData['attribute_id'])) {
+                    $destRecord->setValue('attribute_id', $this->mapAttrIdsMigrated[$recordData['attribute_id']]);
+                }
                 $destinationRecords->addRecord($destRecord);
             }
             if (in_array($sourceDocName, $sourceEntityDocuments)) {
