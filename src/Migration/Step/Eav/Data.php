@@ -505,8 +505,6 @@ class Data implements StageInterface, RollbackInterface
             $recordsToSave->addRecord($destinationRecord);
         }
 
-        var_dump('attrIdsMigrated', $this->attrIdsMigrated);
-
         // Keep attributes for products in destination, but with new IDs
         $dstRecords = $this->destination->getRecords($sourceDocName, 0, $this->destination->getRecordsCount($sourceDocName));
         foreach ($dstRecords as $recordData) {
@@ -537,7 +535,7 @@ class Data implements StageInterface, RollbackInterface
             $destinationRecord->setValue('attribute_id', null);
             $destinationRecord->setValue(
                 'entity_type_id',
-                $this->mapEntityTypeIdsDestOldNew[$destinationRecord->getValue('entity_type_id')]
+                isset($this->mapEntityTypeIdsDestOldNew[$destinationRecord->getValue('entity_type_id')]) ? $this->mapEntityTypeIdsDestOldNew[$destinationRecord->getValue('entity_type_id')] : $destinationRecord->getValue('entity_type_id')
             );
             
             $this->attrIdsKept[$oldAttrId] = true;
@@ -579,7 +577,6 @@ class Data implements StageInterface, RollbackInterface
 
                     if (!isset($this->mapAttrIdsMigrated[$sourceRecordData['attribute_id']])) {
                         var_dump('ignore source attribute entity because not in maps', $sourceRecordData);
-                        var_dump(isset($this->mapAttrIdsMigrated[$sourceRecordData['attribute_id']]));
                         continue;
                     }
         
@@ -672,7 +669,6 @@ class Data implements StageInterface, RollbackInterface
                 $recordsToSave->addRecord($destinationRecord);
             }
 
-            var_dump('saving', $sourceDocName);
             $this->destination->clearDocument($destinationDocument->getName());
             $this->saveRecords($destinationDocument, $recordsToSave);
         }
@@ -1193,6 +1189,7 @@ class Data implements StageInterface, RollbackInterface
         foreach ($this->initialData->getAttributeSets('dest') as $attributeSetId => $record) {
 
             $entityTypeId = $this->mapEntityTypeIdsDestOldNew[$record['entity_type_id']];
+
             $newKey = $entityTypeId . '-' . $record['attribute_set_name'];
             if(!isset($this->newAttributeSets[$newKey])) {
                 $newKey = $entityTypeId . '-' . 'Migration_'.$record['attribute_set_name'];
@@ -1224,9 +1221,6 @@ class Data implements StageInterface, RollbackInterface
 
             $this->mapAttrSetIdsMigrated[$sourceAttributeSetId] = $newAttributeSet['attribute_set_id'];
         }
-
-        var_dump('mapAttrSetIdsKept', $this->mapAttrSetIdsKept);
-        var_dump('mapAttrSetIdsMigrated', $this->mapAttrSetIdsMigrated);
     }
 
     /**
@@ -1242,7 +1236,6 @@ class Data implements StageInterface, RollbackInterface
         );
         
         foreach ($this->initialData->getAttributeGroups('dest') as $record) {
-            var_dump('mapping group '.$record['attribute_group_id'].' from dest', $record);
             if(isset($this->mapAttrSetIdsKept[$record['attribute_set_id']])) {
 
                 $newKey = $this->mapAttrSetIdsKept[$record['attribute_set_id']] . '-'
@@ -1256,8 +1249,6 @@ class Data implements StageInterface, RollbackInterface
                 $newAttributeGroup = $newAttributeGroups[$newKey];
                 $this->mapAttributeGroupIdsDestOldNew[$record['attribute_group_id']] =
                     $newAttributeGroup['attribute_group_id'];
-
-                var_dump('new id', $newAttributeGroup['attribute_group_id']);
 
                 $this->mapAttrGroupIdsKept[$record['attribute_group_id']] = $newAttributeGroup['attribute_group_id'];
             }
@@ -1279,9 +1270,6 @@ class Data implements StageInterface, RollbackInterface
                 $this->mapAttrGroupIdsMigrated[$record['attribute_group_id']] = $newAttributeGroup['attribute_group_id'];
             }
         }
-
-        var_dump('mapAttrGroupIdsKept', $this->mapAttrGroupIdsKept);
-        var_dump('mapAttrGroupIdsMigrated', $this->mapAttrGroupIdsMigrated);
     }
 
     /**
@@ -1330,9 +1318,6 @@ class Data implements StageInterface, RollbackInterface
                 }
             }
         }*/
-
-        var_dump('mapAttrIdsKept', $this->mapAttrIdsKept);
-        var_dump('mapAttrIdsMigrated', $this->mapAttrIdsMigrated);
 
         $this->exportIdsMaps();
     }
