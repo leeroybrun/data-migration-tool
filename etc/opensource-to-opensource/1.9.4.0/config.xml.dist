@@ -5,7 +5,8 @@
  * See COPYING.txt for license details.
  */
 -->
-<config xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="../../config.xsd">
+<config xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+        xs:noNamespaceSchemaLocation="urn:magento:module:Magento_DataMigrationTool:etc/config.xsd">
     <steps mode="settings">
         <step title="Stores Step">
             <integrity>Migration\Step\Stores\Integrity</integrity>
@@ -65,6 +66,10 @@
             <delta>Migration\Step\Map\Delta</delta>
             <volume>Migration\Step\Map\Volume</volume>
         </step>
+        <!--<step title="Url Rewrite Step">
+            <delta>Migration\Step\UrlRewrite\Version191to2000Delta</delta>
+            <volume>Migration\Step\UrlRewrite\Version191to2000</volume>
+        </step>-->
         <step title="OrderGrids Step">
             <delta>Migration\Step\OrderGrids\Delta</delta>
             <volume>Migration\Step\OrderGrids\Volume</volume>
@@ -73,10 +78,10 @@
             <delta>Migration\Step\SalesIncrement\Delta</delta>
             <volume>Migration\Step\SalesIncrement\Volume</volume>
         </step>
-        <step title="Inventory Step">
+        <!--<step title="Inventory Step">
             <delta>Migration\Step\Inventory\Delta</delta>
             <volume>Migration\Step\Inventory\Volume</volume>
-        </step>
+        </step>-->
     </steps>
     <source>
         <database host="localhost" name="magento1" user="root" />

@@ -55,7 +55,12 @@ class Volume extends AbstractVolume
     /**
      * @var array
      */
-    protected $deletedDocumentRowsCount;
+    protected $changedDocumentRowsCount;
+
+    /**
+     * @var string
+     */
+    private $mode;
 
     /**
      * @param Logger $logger
@@ -65,6 +70,7 @@ class Volume extends AbstractVolume
      * @param ProgressBar\LogLevelProcessor $progressBar
      * @param Helper $helper
      * @param Progress $progress
+     * @param string $mode
      */
     public function __construct(
         Logger $logger,
@@ -73,7 +79,8 @@ class Volume extends AbstractVolume
         MapFactory $mapFactory,
         ProgressBar\LogLevelProcessor $progressBar,
         Helper $helper,
-        Progress $progress
+        Progress $progress,
+        $mode
     ) {
         $this->source = $source;
         $this->destination = $destination;
@@ -81,6 +88,7 @@ class Volume extends AbstractVolume
         $this->progressBar = $progressBar;
         $this->helper = $helper;
         $this->progress = $progress;
+        $this->mode = $mode;
         parent::__construct($logger);
     }
 
@@ -97,6 +105,7 @@ class Volume extends AbstractVolume
             if (!$destinationName
                 || !$this->destination->getDocument($destinationName)
                 || $this->helper->getFieldsUpdateOnDuplicate($destinationName)
+                || $this->helper->skipIfDeltaMode($destinationName, $this->mode)
             ) {
                 continue;
             }
@@ -123,16 +132,16 @@ class Volume extends AbstractVolume
      */
     public function getDestinationRecordsCount($destinationName)
     {
-        if (null === $this->deletedDocumentRowsCount) {
-            $this->deletedDocumentRowsCount = $this->progress->getProcessedEntities(
+        if (null === $this->changedDocumentRowsCount) {
+            $this->changedDocumentRowsCount = $this->progress->getProcessedEntities(
                 'PostProcessing',
-                'deletedDocumentRowsCount'
+                'changedDocumentRowsCount'
             );
         }
 
         $destinationCount = $this->destination->getRecordsCount($destinationName);
-        if (!empty($this->deletedDocumentRowsCount[$destinationName])) {
-            $destinationCount -= $this->deletedDocumentRowsCount[$destinationName];
+        if (!empty($this->changedDocumentRowsCount[$destinationName])) {
+            $destinationCount += $this->changedDocumentRowsCount[$destinationName];
         }
         return $destinationCount;
     }

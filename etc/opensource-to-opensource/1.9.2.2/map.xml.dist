@@ -5,7 +5,8 @@
  * See COPYING.txt for license details.
  */
 -->
-<map xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="../../map.xsd">
+<map xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+     xs:noNamespaceSchemaLocation="urn:magento:module:Magento_DataMigrationTool:etc/map.xsd">
     <source>
         <document_rules>
             <ignore>
@@ -132,19 +133,13 @@
                 <document>catalog_category_anc_products_index_tmp</document>
             </ignore>
             <ignore>
-                <document>catalog_category_flat_cl</document>
+                <document>catalog_product_index*</document>
             </ignore>
             <ignore>
-                <document>catalog_product_index_*</document>
-            </ignore>
-            <ignore>
-                <document>catalog_category_product_index_*</document>
+                <document>catalog_category_product_index*</document>
             </ignore>
             <ignore>
                 <document>catalog_product_enabled_index</document>
-            </ignore>
-            <ignore>
-                <document>catalog_product_flat_cl</document>
             </ignore>
             <ignore>
                 <document>cataloginventory_stock_status</document>
@@ -420,13 +415,10 @@
                 <document>s_*b_*_*</document>
             </ignore>
             <ignore>
-                <document>catalog_product_flat_*</document>
+                <document>catalog_product_flat*</document>
             </ignore>
             <ignore>
-                <document>catalog_category_flat_*</document>
-            </ignore>
-            <ignore>
-                <document>catalog_category_flat_store_*</document>
+                <document>catalog_category_flat*</document>
             </ignore>
             <ignore>
                 <document>googleoptimizer_code</document>
@@ -795,14 +787,21 @@
                 <field>catalog_category_entity_varchar.value</field>
                 <handler class="\Migration\Handler\SetValueAttributeCondition">
                     <param name="attributeCode" value="custom_design" />
-                    <param name="value" value="null" />
+                    <param name="value" value="NULL" />
+                </handler>
+            </transform>
+            <transform>
+                <field>catalog_product_entity_varchar.value</field>
+                <handler class="\Migration\Handler\SetValueAttributeCondition">
+                    <param name="attributeCode" value="custom_design" />
+                    <param name="value" value="NULL" />
                 </handler>
             </transform>
             <transform>
                 <field>catalog_category_entity_text.value</field>
                 <handler class="\Migration\Handler\SetValueAttributeCondition">
                     <param name="attributeCode" value="custom_layout_update" />
-                    <param name="value" value="null" />
+                    <param name="value" value="NULL" />
                 </handler>
             </transform>
             <transform>
@@ -992,6 +991,26 @@
             <transform>
                 <field>admin_user.extra</field>
                 <handler class="\Migration\Handler\SerializeToJson" />
+            </transform>
+            <transform>
+                <field>catalog_product_entity_text.value</field>
+                <handler class="\Migration\Handler\CleanMultiselect" />
+            </transform>
+            <transform>
+                <field>catalog_product_entity_varchar.value</field>
+                <handler class="\Migration\Handler\CleanMultiselect" />
+            </transform>
+            <transform>
+                <field>email_template.is_legacy</field>
+                <handler class="\Migration\Handler\SetValue">
+                    <param name="value" value="1" />
+                </handler>
+            </transform>
+            <transform>
+                <field>newsletter_template.is_legacy</field>
+                <handler class="\Migration\Handler\SetValue">
+                    <param name="value" value="1" />
+                </handler>
             </transform>
             <ignore>
                 <field>admin_rule.role_type</field>
@@ -1207,6 +1226,12 @@
                 <datatype>sales_flat_quote_payment.cc_exp_month</datatype>
             </ignore>
             <ignore>
+                <datatype>salesrule_coupon.expiration_date</datatype>
+            </ignore>
+            <ignore>
+                <datatype>sales_flat_quote.customer_note</datatype>
+            </ignore>
+            <ignore>
                 <datatype>weee_tax.state</datatype>
             </ignore>
             <ignore>
@@ -1282,9 +1307,6 @@
     </source>
     <destination>
         <document_rules>
-            <ignore>
-                <document>catalog_product_index_price*</document>
-            </ignore>
             <ignore>
                 <document>customer_entity</document>
             </ignore>
@@ -1370,10 +1392,10 @@
                 <document>layout_link</document>
             </ignore>
             <ignore>
-                <document>catalog_product_flat_*</document>
+                <document>catalog_product_flat*</document>
             </ignore>
             <ignore>
-                <document>catalog_category_flat_*</document>
+                <document>catalog_category_flat*</document>
             </ignore>
             <ignore>
                 <document>catalogindex_eav</document>
@@ -1391,10 +1413,10 @@
                 <document>customer_eav_attribute_website</document>
             </ignore>
             <ignore>
-                <document>catalog_product_index_*</document>
+                <document>catalog_product_index*</document>
             </ignore>
             <ignore>
-                <document>catalog_category_product_index_*</document>
+                <document>catalog_category_product_index*</document>
             </ignore>
             <ignore>
                 <document>catalog_product_frontend_action</document>
@@ -1493,7 +1515,7 @@
                 <document>sequence_order_*</document>
             </ignore>
             <ignore>
-                <document>sequence_shipment*</document>
+                <document>sequence_shipment_*</document>
             </ignore>
             <ignore>
                 <document>sequence_rma_item_*</document>
@@ -1682,10 +1704,37 @@
                 <document>admin_passwords</document>
             </ignore>
             <ignore>
+                <document>admin_user_expiration</document>
+            </ignore>
+            <ignore>
                 <document>catalog_product_entity_media_gallery_value_to_entity</document>
             </ignore>
             <ignore>
                 <document>catalog_product_entity_media_gallery_value_video</document>
+            </ignore>
+            <ignore>
+                <document>media_gallery_asset</document>
+            </ignore>
+            <ignore>
+                <document>media_gallery_asset_keyword</document>
+            </ignore>
+            <ignore>
+                <document>media_gallery_keyword</document>
+            </ignore>
+            <ignore>
+                <document>media_content_asset</document>
+            </ignore>
+            <ignore>
+                <document>adobe_stock_asset</document>
+            </ignore>
+            <ignore>
+                <document>adobe_stock_category</document>
+            </ignore>
+            <ignore>
+                <document>adobe_stock_creator</document>
+            </ignore>
+            <ignore>
+                <document>adobe_user_profile</document>
             </ignore>
             <ignore>
                 <document>catalog_product_entity_tier_price</document>
@@ -1763,13 +1812,61 @@
                 <document>inventory_source_stock_link</document>
             </ignore>
             <ignore>
-                <document>inventory_stock</document>
-            </ignore>
-            <ignore>
-                <document>inventory_stock_*</document>
+                <document>inventory_stock*</document>
             </ignore>
             <ignore>
                 <document>inventory_geoname</document>
+            </ignore>
+            <ignore>
+                <document>inventory_order_notification</document>
+            </ignore>
+            <ignore>
+                <document>inventory_pickup_location_order</document>
+            </ignore>
+            <ignore>
+                <document>inventory_pickup_location_quote_address</document>
+            </ignore>
+            <ignore>
+                <document>braintree_credit_prices</document>
+            </ignore>
+            <ignore>
+                <document>braintree_transaction_details</document>
+            </ignore>
+            <ignore>
+                <document>admin_analytics_usage_version_log</document>
+            </ignore>
+            <ignore>
+                <document>scconnector_google_feed_cl</document>
+            </ignore>
+            <ignore>
+                <document>scconnector_google_remove_cl</document>
+            </ignore>
+            <ignore>
+                <document>temando_product_attribute_mapping</document>
+            </ignore>
+            <ignore>
+                <document>vertex_custom_option_flex_field</document>
+            </ignore>
+            <ignore>
+                <document>yotpo_rich_snippets</document>
+            </ignore>
+            <ignore>
+                <document>yotpo_sync</document>
+            </ignore>
+            <ignore>
+                <document>yotpo_order_status_history</document>
+            </ignore>
+            <ignore>
+                <document>pagebuilder_template</document>
+            </ignore>
+            <ignore>
+                <document>tfa_country_codes</document>
+            </ignore>
+            <ignore>
+                <document>tfa_user_config</document>
+            </ignore>
+            <ignore>
+                <document>email_coupon_attribute</document>
             </ignore>
             <ignore>
                 <document>magento_acknowledged_bulk</document>
@@ -1800,6 +1897,12 @@
             </ignore>
             <ignore>
                 <document>msp_tfa_user_config</document>
+            </ignore>
+            <ignore>
+                <document>login_as_customer</document>
+            </ignore>
+            <ignore>
+                <document>magento_login_as_customer_log</document>
             </ignore>
             <ignore>
                 <document>queue_poison_pill</document>
@@ -2053,6 +2156,24 @@
                 <field>catalog_product_bundle_option_value.parent_product_id</field>
             </ignore>
             <ignore>
+                <field>core_config_data.updated_at</field>
+            </ignore>
+            <ignore>
+                <field>cms_page.layout_update_selected</field>
+            </ignore>
+            <ignore>
+                <field>email_template.is_legacy</field>
+            </ignore>
+            <ignore>
+                <field>newsletter_template.is_legacy</field>
+            </ignore>
+            <ignore>
+                <datatype>salesrule_coupon.expiration_date</datatype>
+            </ignore>
+            <ignore>
+                <datatype>quote.customer_note</datatype>
+            </ignore>
+            <ignore>
                 <field>admin_user.refresh_token</field>
             </ignore>
             <ignore>
@@ -2089,12 +2210,6 @@
                 <datatype>catalog_product_bundle_price_index.customer_group_id</datatype>
             </ignore>
             <ignore>
-                <datatype>catalog_product_index_price.customer_group_id</datatype>
-            </ignore>
-            <ignore>
-                <datatype>catalog_product_index_tier_price.customer_group_id</datatype>
-            </ignore>
-            <ignore>
                 <datatype>catalogrule_customer_group.customer_group_id</datatype>
             </ignore>
             <ignore>
@@ -2123,12 +2238,6 @@
             </ignore>
             <ignore>
                 <datatype>catalog_product_bundle_price_index.customer_group_id</datatype>
-            </ignore>
-            <ignore>
-                <datatype>catalog_product_index_price.customer_group_id</datatype>
-            </ignore>
-            <ignore>
-                <datatype>catalog_product_index_tier_price.customer_group_id</datatype>
             </ignore>
             <ignore>
                 <datatype>catalogrule_customer_group.customer_group_id</datatype>

@@ -11,6 +11,7 @@ use Migration\App\ProgressBar;
 use Migration\Reader\GroupsFactory;
 use Migration\ResourceModel\Destination;
 use Migration\Step\Eav\Model\IgnoredAttributes;
+use Migration\Step\Eav\Model\Data as ModelData;
 
 /**
  * Class Volume
@@ -87,8 +88,12 @@ class Volume extends AbstractVolume
     public function perform()
     {
         $this->progress->start(2);
+<<<<<<< HEAD
         //$this->checkAttributesMismatch();
         //$this->validateAttributeSetsAndGroups();
+=======
+        $this->checkAttributesMismatch();
+>>>>>>> e07ed628a60f5ee16f2806241c79fd01747b0cc8
         $this->progress->finish();
         $result = $this->checkForErrors(Logger::ERROR);
         if ($result) {
@@ -106,7 +111,7 @@ class Volume extends AbstractVolume
     {
         foreach ($this->helper->getDestinationRecords('eav_attribute') as $attribute) {
             $sourceAttributes = $this->ignoredAttributes
-                ->clearIgnoredAttributes($this->initialData->getAttributes('source'));
+                ->clearIgnoredAttributes($this->initialData->getAttributes(ModelData::TYPE_SOURCE));
 
             if (isset($sourceAttributes[$attribute['attribute_id']])
                 && ($sourceAttributes[$attribute['attribute_id']]['attribute_code'] != $attribute['attribute_code'])
@@ -116,30 +121,6 @@ class Volume extends AbstractVolume
                     $attribute['attribute_id']
                 );
             }
-        }
-        $this->progress->advance();
-    }
-
-    /**
-     * Validate attribute sets and groups
-     *
-     * @return void
-     */
-    private function validateAttributeSetsAndGroups()
-    {
-        $sourceRecords = $this->helper->getSourceRecordsCount('eav_attribute_set');
-        $initialDestRecords = count($this->initialData->getAttributeSets('dest'));
-        if ($this->helper->getDestinationRecordsCount('eav_attribute_set') != $sourceRecords + $initialDestRecords) {
-            $this->errors[] = 'Mismatch of entities in the document: eav_attribute_set';
-        }
-
-        $sourceRecords = $this->helper->getSourceRecordsCount('eav_attribute_group');
-        $addedRecords = count($this->helper->getAddedGroups());
-        $initialDestRecords = count($this->initialData->getAttributeGroups('dest'));
-        if ($this->helper->getDestinationRecordsCount('eav_attribute_group') !=
-            $sourceRecords + $addedRecords + $initialDestRecords
-        ) {
-            $this->errors[] = 'Mismatch of entities in the document: eav_attribute_group';
         }
         $this->progress->advance();
     }
