@@ -2165,20 +2165,18 @@
                 <field>catalogrule.actions_serialized</field>
                 <handler class="\Migration\Handler\SerializeToJson" />
             </transform>
-<<<<<<< HEAD
-=======
             <transform>
                 <field>admin_user.extra</field>
                 <handler class="\Migration\Handler\SerializeToJson" />
             </transform>
-            <transform>
+            <!--<transform>
                 <field>catalog_product_entity_text.value</field>
                 <handler class="\Migration\Handler\CleanMultiselect" />
             </transform>
             <transform>
                 <field>catalog_product_entity_varchar.value</field>
                 <handler class="\Migration\Handler\CleanMultiselect" />
-            </transform>
+            </transform>-->
             <transform>
                 <field>email_template.is_legacy</field>
                 <handler class="\Migration\Handler\SetValue">
@@ -2191,7 +2189,6 @@
                     <param name="value" value="1" />
                 </handler>
             </transform>
->>>>>>> e07ed628a60f5ee16f2806241c79fd01747b0cc8
             <ignore>
                 <field>admin_rule.role_type</field>
             </ignore>

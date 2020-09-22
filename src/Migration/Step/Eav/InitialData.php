@@ -123,22 +123,24 @@ class InitialData
      */
     private function initAttributeSets()
     {
-<<<<<<< HEAD
+//<<<<<<< HEAD
         $this->attributeSets['source'] = $this->helper->getSourceRecords(
             'eav_attribute_set',
             ['attribute_set_id']
         );
         $this->attributeSets['dest'] = $this->helper->getDestinationRecords(
-=======
-        if ($this->attributeSets) {
+//=======
+/*
+/*        if ($this->attributeSets) {
             return;
         }
         $this->attributeSets[ModelData::TYPE_SOURCE] = $this->helper->getSourceRecords(
             'eav_attribute_set',
             ['attribute_set_id']
         );
-        $this->attributeSets[ModelData::TYPE_DEST] = $this->helper->getDestinationRecords(
->>>>>>> e07ed628a60f5ee16f2806241c79fd01747b0cc8
+        $this->attributeSets[ModelData::TYPE_DEST] = $this->helper->getDestinationRecords(*/
+
+//>>>>>>> e07ed628a60f5ee16f2806241c79fd01747b0cc8
             'eav_attribute_set',
             ['attribute_set_id']
         );
@@ -151,18 +153,20 @@ class InitialData
      */
     private function initAttributeGroups()
     {
-<<<<<<< HEAD
+//<<<<<<< HEAD
         $this->attributeGroups['source'] = $this->helper->getSourceRecords(
             'eav_attribute_group',
             ['attribute_set_id', 'attribute_group_name']
         );
         $this->attributeGroups['dest'] = $this->helper->getDestinationRecords(
-=======
+//=======
+/*
         if ($this->attributeGroups) {
             return;
         }
         $this->attributeGroups[ModelData::TYPE_SOURCE] = $this->helper->getSourceRecords(
->>>>>>> e07ed628a60f5ee16f2806241c79fd01747b0cc8
+*/
+//>>>>>>> e07ed628a60f5ee16f2806241c79fd01747b0cc8
             'eav_attribute_group',
             ['attribute_group_id']
         );
